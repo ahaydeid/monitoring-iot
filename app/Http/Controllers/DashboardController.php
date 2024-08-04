@@ -53,6 +53,10 @@ class DashboardController extends Controller
                         ->rawColumns(['action'])
                         ->make(true);
     }
+    public function autoLoad(){
+        $data = Device1::orderBy('id','DESC')->first();
+        return response()->json($data);
+    }
     public function getTanaman(){
         $data['tanaman'] = Tanaman::all();
         return response()->json($data);

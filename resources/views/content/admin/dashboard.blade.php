@@ -8,7 +8,7 @@
                     <small>TDS</small>
                 </div>
                 <div class="mt-3 mb-4">
-                    <h2 class="text-center">{{ (isset($device)) ? ($device->tds) : ''}}</h2>
+                    <h2 class="text-center" id="tds">{{ (isset($device)) ? ($device->tds) : ''}}</h2>
                 </div>
             </div>
         </div>
@@ -20,7 +20,7 @@
                     <small>PH</small>
                 </div>
                 <div class="mt-3 mb-4">
-                    <h2 class="text-center">{{ (isset($device)) ? ($device->ph) : ''}}</h2>
+                    <h2 class="text-center" id="ph">{{ (isset($device)) ? ($device->ph) : ''}}</h2>
                 </div>
             </div>
         </div>
@@ -32,7 +32,7 @@
                     <small>Temperatur</small>
                 </div>
                 <div class="mt-3 mb-4">
-                    <h2 class="text-center">{{ (isset($device)) ? ($device->suhu) : ''}}</h2>
+                    <h2 class="text-center" id="temperatur">{{ (isset($device)) ? ($device->suhu) : ''}}</h2>
                 </div>
             </div>
         </div>
@@ -64,167 +64,184 @@
 <script src="{{ asset('assets/datatables/datatables.min.js') }}"></script>
 <script src="{{ asset('assets/sweetalert2/sweetalert2.min.js') }}"></script>
 <script>
-     $.ajaxSetup({
-        headers: {'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')}
-    });
-    var tblTnm = $('#TanamanTbl').DataTable({
-        processing: true,
-        serverSide: true,
-        destroy : true,
-        ajax: {
-            url: '/get-tanaman',
-            type: 'post',
-        },
-        order:  [1, 'asc'],
-        columns: [
-            { data: 'no', name:'id', sortable: false, render: function (data, type, row, meta) {
-                return meta.row + meta.settings._iDisplayStart + 1;
-                },
-                className : "dt-center"
+    $(document).ready(function(){
+        function RealTimeData(){
+            $.ajax({
+                url : '/auto-load-data',
+                type : 'post',
+                dataType : 'json',
+                success : function(data){
+                    $('#tds').html(data.tds)
+                    $('#ph').html(data.ph)
+                    $('#temperatur').html(data.suhu)
+                }
+            })
+        }
+        setInterval(function(){
+            RealTimeData() // this will run after every 5 seconds
+        }, 5000);
+        $.ajaxSetup({
+            headers: {'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')}
+        });
+        var tblTnm = $('#TanamanTbl').DataTable({
+            processing: true,
+            serverSide: true,
+            destroy : true,
+            ajax: {
+                url: '/get-tanaman',
+                type: 'post',
             },
-            {
-                data: 'jenis_sayur',
-                name : 'jenis_sayur',
-            },
-            {
-                data: 'kuantitas_tanam',
-                name : 'kuantitas_tanam',
-                className : 'dt-center'
-            },
-            {
-                data: 'tersedia',
-                render : function(data){
-                    var text = `<span class="text-success fw-bold">${data}</span>`;
-                    return text;
-                },
-                className : 'dt-center'
-            },
-            {
-                data: 'dipesan',
-                name : 'dipesan',
-                className : 'dt-center'
-            },
-            {
-                data: 'action',
-                name : 'action',
-                className : 'dt-center'
-            },
-        ]
-        
-    })
-    $('#AddTanaman').on('click',function(e){
-        e.preventDefault();
-        $('#tambahTanaman').modal('show');
-        $.ajax({
-            url : '/tanaman',
-            dataType : 'json',
-            beforeSend : function(){
-
-            },
-            success :function(respon){
-                sayur = '<option value="" selected>--pilih--</option>';
-                $.each(respon.tanaman,function(key,val){
-                    sayur += `<option value = "`+val.id+`">`+val.jenis_sayur+`</option>`
-                })
-                $('#jenisSayur').html(sayur);
-            },
-            error :function(){
-                alert('Terjadi kesalahan !')
-            }
-        })
-    })
-    $('#formAddTanaman').on('submit',function(e){
-        e.preventDefault();
-        var data = $(this).serialize();
-        Swal.fire({
-            text: "Apakah anda akan menyimpan data ini ? ",
-            icon: 'info',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'ya'
-        }).then(function(confirm){
-            if(confirm.value == true){
-                $.ajax({
-                    url : '/store-tanaman',
-                    type : 'post',
-                    data : data,
-                    dataType : 'json',
-                    beforeSend : function(){
-
+            order:  [1, 'asc'],
+            columns: [
+                { data: 'no', name:'id', sortable: false, render: function (data, type, row, meta) {
+                    return meta.row + meta.settings._iDisplayStart + 1;
                     },
-                    success :function(respon){
-                        if(respon.status == 'success'){
-                            $('#tambahTanaman').modal('hide');
-                            $('#formAddTanaman')[0].reset();
-                            tblTnm.ajax.reload();
+                    className : "dt-center"
+                },
+                {
+                    data: 'jenis_sayur',
+                    name : 'jenis_sayur',
+                },
+                {
+                    data: 'kuantitas_tanam',
+                    name : 'kuantitas_tanam',
+                    className : 'dt-center'
+                },
+                {
+                    data: 'tersedia',
+                    render : function(data){
+                        var text = `<span class="text-success fw-bold">${data}</span>`;
+                        return text;
+                    },
+                    className : 'dt-center'
+                },
+                {
+                    data: 'dipesan',
+                    name : 'dipesan',
+                    className : 'dt-center'
+                },
+                {
+                    data: 'action',
+                    name : 'action',
+                    className : 'dt-center'
+                },
+            ]
+            
+        })
+        $('#AddTanaman').on('click',function(e){
+            e.preventDefault();
+            $('#tambahTanaman').modal('show');
+            $.ajax({
+                url : '/tanaman',
+                dataType : 'json',
+                beforeSend : function(){
+
+                },
+                success :function(respon){
+                    sayur = '<option value="" selected>--pilih--</option>';
+                    $.each(respon.tanaman,function(key,val){
+                        sayur += `<option value = "`+val.id+`">`+val.jenis_sayur+`</option>`
+                    })
+                    $('#jenisSayur').html(sayur);
+                },
+                error :function(){
+                    alert('Terjadi kesalahan !')
+                }
+            })
+        })
+        $('#formAddTanaman').on('submit',function(e){
+            e.preventDefault();
+            var data = $(this).serialize();
+            Swal.fire({
+                text: "Apakah anda akan menyimpan data ini ? ",
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'ya'
+            }).then(function(confirm){
+                if(confirm.value == true){
+                    $.ajax({
+                        url : '/store-tanaman',
+                        type : 'post',
+                        data : data,
+                        dataType : 'json',
+                        beforeSend : function(){
+
+                        },
+                        success :function(respon){
+                            if(respon.status == 'success'){
+                                $('#tambahTanaman').modal('hide');
+                                $('#formAddTanaman')[0].reset();
+                                tblTnm.ajax.reload();
+                            }
+                            swal.fire({
+                                icon : respon.status,
+                                text : respon.msg
+                            })
+                        },
+                        error : function(){
+
                         }
-                        swal.fire({
-                            icon : respon.status,
-                            text : respon.msg
-                        })
-                    },
-                    error : function(){
-
-                    }
-                })
-            }
+                    })
+                }
+            })
         })
-    })
-    $(document).on('click','.show-dtl',function(e){
-        e.preventDefault();
-        $('#Dtltanam').modal('show')
-        var id = $(this).attr('data-id');
-        var jenis_sayur = 'JENIS SAYUR  '+$(this).attr('data-jenis');
-        $('#head').html(`
-        <p class="fw-bold fs-5">`+jenis_sayur+`</p>
-         <button type="button" class="btn-close me-3" data-bs-dismiss="modal" aria-label="Close"></button>
-        `)
-        loadDetail(id)
-    })
-    function loadDetail(id){
-        $('#DtlTanamanTanam').DataTable({
-        processing: true,
-        serverSide: true,
-        destroy : true,
-        ajax: {
-            url: '/get-detail-tanam',
-            type: 'post',
-            data : {id : id},
-        },
-        order:  [1, 'asc'],
-        columns: [
-            { data: 'no', name:'id', sortable: false, render: function (data, type, row, meta) {
-                return meta.row + meta.settings._iDisplayStart + 1;
+        $(document).on('click','.show-dtl',function(e){
+            e.preventDefault();
+            $('#Dtltanam').modal('show')
+            var id = $(this).attr('data-id');
+            var jenis_sayur = 'JENIS SAYUR  '+$(this).attr('data-jenis');
+            $('#head').html(`
+            <p class="fw-bold fs-5">`+jenis_sayur+`</p>
+            <button type="button" class="btn-close me-3" data-bs-dismiss="modal" aria-label="Close"></button>
+            `)
+            loadDetail(id)
+        })
+        function loadDetail(id){
+            $('#DtlTanamanTanam').DataTable({
+            processing: true,
+            serverSide: true,
+            destroy : true,
+            ajax: {
+                url: '/get-detail-tanam',
+                type: 'post',
+                data : {id : id},
+            },
+            order:  [1, 'asc'],
+            columns: [
+                { data: 'no', name:'id', sortable: false, render: function (data, type, row, meta) {
+                    return meta.row + meta.settings._iDisplayStart + 1;
+                    },
+                    className : "dt-center"
                 },
-                className : "dt-center"
-            },
-            {
-                data: 'tanggal_tanam',
-                name : 'tanggal_tanam',
-                className : 'dt-center'
-            },
-            {
-                data: null,
-                render :function(data){
-                    var status = '';
-                    if(data.status === "panen"){
-                        status = '<span class="btn btn-success btn-sm">Panen</span>';
-                    }else{
-                        status = data.tanggal_panen;
-                    }
-                    return status;
+                {
+                    data: 'tanggal_tanam',
+                    name : 'tanggal_tanam',
+                    className : 'dt-center'
                 },
-                className : 'dt-center'
-            },
-            {
-                data: 'kuantitas_tanam',
-                name : 'kuantitas_tanam',
-                className : 'dt-center'
-            },
-        ]
-        
+                {
+                    data: null,
+                    render :function(data){
+                        var status = '';
+                        if(data.status === "panen"){
+                            status = '<span class="btn btn-success btn-sm">Panen</span>';
+                        }else{
+                            status = data.tanggal_panen;
+                        }
+                        return status;
+                    },
+                    className : 'dt-center'
+                },
+                {
+                    data: 'kuantitas_tanam',
+                    name : 'kuantitas_tanam',
+                    className : 'dt-center'
+                },
+            ]
+            
+            })
+        }
     })
-    }
 </script>
 @endsection

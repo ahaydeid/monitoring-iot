@@ -87,7 +87,7 @@
             {
                 data: 'kontak',
                 render : function(data){
-                    var btn = '<i class="fa-brands fa-whatsapp fa-2x text-success fw-bold"></i>';
+                    var btn = `<a href="https://wa.me/`+data+`" target="_blank"><i class="fa-brands fa-whatsapp fa-2x text-success fw-bold"></i></a>`;
                     return btn;
                 },
                 className : 'dt-center'

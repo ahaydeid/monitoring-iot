@@ -11,6 +11,10 @@
                     <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                     Katalog
                 </a>
+                <a class="nav-link" href="/master-jenis-sayur">
+                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                    Master Jenis Sayur
+                </a>
             </div>
         </div>
         <div class="sb-sidenav-footer">
