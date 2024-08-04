@@ -22,7 +22,7 @@ Route::post('/proses_register', [LoginController::class,'store']);
 Route::post('/auth/login', [LoginController::class,'proses_auth']);
 Route::get('/logout', [LoginController::class,'logout']);
 Route::post('/auto-load-data', [DashboardController::class,'autoLoad'])->middleware('auth');
-Route::get('/dashboard', [DashboardController::class,'index'])->middleware('auth');
+Route::get('/monitoring', [DashboardController::class,'index'])->middleware('auth');
 Route::post('/get-tanaman', [DashboardController::class,'getData'])->middleware('auth');
 Route::get('/tanaman', [DashboardController::class,'getTanaman'])->middleware('auth');
 Route::post('/store-tanaman', [DashboardController::class,'store'])->middleware('auth');

@@ -42,7 +42,7 @@ class Catalogcontroller extends Controller
                         ->make(true);
     }
     public function getDataPanen(Request $request){
-        $data = DetailTanam::where('id_tanam',$request->id)->where('status','panen')->get();
+        $data = DetailTanam::where('id_tanam',$request->id)->get();
         return response()->json($data);
     }
     public function getStokPanen(Request $request){
