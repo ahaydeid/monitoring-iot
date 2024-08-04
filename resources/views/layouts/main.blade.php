@@ -7,7 +7,7 @@
         <meta name="description" content="" />
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <meta name="author" content="" />
-        <title>{{ (isset($title) ? $title : 'Monitoring') }}</title>
+        <title>{{ (isset($title) ? $title : 'TaniKini') }}</title>
         <link href="{{ asset('assets/css/styles.css') }}" rel="stylesheet" />
         <link href="{{ asset('assets/datatables/datatables.min.css') }}" rel="stylesheet" />
         <link href="{{ asset('assets/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" />
