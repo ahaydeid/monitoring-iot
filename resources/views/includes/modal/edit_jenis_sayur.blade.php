@@ -8,13 +8,17 @@
                 <form id="formUpdateTanaman">
                     <div class="row d-flex justify-content-center">
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="text-light">Jenis sayur</label>
                                     <input type="text" name="id" id="id" hidden>
                                     <input type="text" name="jenis_sayur" class="form-control" id="jenis_sayur" required>
                                 </div>                        
-                            </div>         
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label class="text-light">Gambar</label>
+                                <input type="file" name="image" class="form-control">
+                            </div>
                             <div class="text-center col-md-12">
                                 <button 
                                     type="submit"

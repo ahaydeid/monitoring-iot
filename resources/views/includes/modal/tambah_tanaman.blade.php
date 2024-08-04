@@ -1,5 +1,5 @@
 <div class="modal fade" id="tambahTanaman" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content" style="background : #0094ff !important;">
             <div class="modal-body mx-3">
                 <div class="row">

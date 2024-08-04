@@ -10,6 +10,7 @@
                 <tr>
                     <th class="text-center">No</th>
                     <th class="text-center">jenis Sayur</th>
+                    <th class="text-center">gambar</th>
                     <th class="text-center">Aksi</th>
                 </tr>
             </thead>
@@ -47,6 +48,14 @@
                 name : 'jenis_sayur',
             },
             {
+                data: 'gambar',
+                render :function(data){
+                    var img = `<img src ="`+data+`" class="img-fluid" height="50" width="50" alt="gambar">`;
+                    return img;
+                },
+                className : 'dt-center'
+            },
+            {
                 data: 'action',
                 data: 'action',
                 className : 'dt-center'
@@ -60,7 +69,7 @@
     })
     $('#formAddTanaman').on('submit',function(e){
         e.preventDefault();
-        var data = $(this).serialize();
+        var data = new FormData(this);
         Swal.fire({
             text: "Apakah anda akan menyimpan data ini?",
             icon: 'info',
@@ -74,6 +83,8 @@
                     url : '/store-jenis-sayur',
                     type : 'post',
                     data : data,
+                    contentType : false,
+                    processData : false,
                     dataType : 'json',
                     beforeSend : function(){
 
@@ -113,7 +124,7 @@
     })
     $('#formUpdateTanaman').on('submit',function(e){
         e.preventDefault();
-        var data = $(this).serialize();
+        var data = new FormData(this);
         Swal.fire({
             title: 'Apakah anda yakin ?',
             text: "Ingin memperbarui data ini ? ",
@@ -128,6 +139,8 @@
                     url : '/update-jenis-sayur',
                     type : 'post',
                     data : data,
+                    contentType : false,
+                    processData : false,
                     dataType : 'json',
                     beforeSend : function(){
 

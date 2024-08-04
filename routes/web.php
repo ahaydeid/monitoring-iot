@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Catalogcontroller;
 use App\Http\Controllers\TanamanController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\LandingController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,6 +17,8 @@ use App\Http\Controllers\LoginController;
 |
 */
 
+Route::get('/', [LandingController::class,'index']);
+Route::get('/katalog-tanikini', [LandingController::class,'katalog']);
 Route::get('/login', [LoginController::class,'login'])->name('login');
 Route::get('/register', [LoginController::class,'register']);
 Route::post('/proses_register', [LoginController::class,'store']);

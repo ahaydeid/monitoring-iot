@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Tanaman;
 use App\Models\Tanam;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 use DataTables;
 class TanamanController extends Controller
 {
@@ -35,8 +37,18 @@ class TanamanController extends Controller
     public function store(Request $request)
     {
         try{
+            $path = 'public/image/'.$request->get('image');
+            if (! Storage::exists($path)) {
+                Storage::makeDirectory($path,775,true);
+            }
+            $fileName = time() . $request->file('image')->getClientOriginalName();
+            $store = $request->file('image')->storeAs($path, $fileName);
+            $pathFile_application = 'storage/image/'.$fileName ?? null;
+            $base = URL::to('/');
+            $link_image = $base.'/'.$pathFile_application;
             $data = [
                 'jenis_sayur' => $request->jenis_sayur,
+                'gambar'      => $link_image,
                 'created_at'  => date('Y-m-d H:m:s')
             ];
             Tanaman::create($data);
@@ -61,8 +73,24 @@ class TanamanController extends Controller
     public function update(Request $request)
     {
         try{
+            $check = Tanaman::where('id',$request->id)->first();
+            $link_image ='';
+            if($request->image !=null){
+                $path = 'public/image/'.$request->get('image');
+                if (! Storage::exists($path)) {
+                    Storage::makeDirectory($path,775,true);
+                }
+                $fileName = time() . $request->file('image')->getClientOriginalName();
+                $store = $request->file('image')->storeAs($path, $fileName);
+                $pathFile_application = 'storage/image/'.$fileName ?? null;
+                $base = URL::to('/');
+                $link_image = $base.'/'.$pathFile_application;
+            }else{
+                $link_image = $check->gambar;
+            }
             $data = [
                 'jenis_sayur' => $request->jenis_sayur,
+                'gambar'      => $link_image,
                 'updated_at'  => date('Y-m-d H:m:s')
             ];
             Tanaman::where('id',$request->id)->update($data);

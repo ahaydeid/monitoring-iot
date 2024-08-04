@@ -58,7 +58,7 @@ class DashboardController extends Controller
         return response()->json($data);
     }
     public function getTanaman(){
-        $data['tanaman'] = Tanaman::all();
+        $data['tanaman'] = Tanaman::whereNot('jenis_sayur',NULL)->get();
         return response()->json($data);
     }
     public function store(Request $request){
