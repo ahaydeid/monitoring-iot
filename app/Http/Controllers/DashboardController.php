@@ -39,7 +39,7 @@ class DashboardController extends Controller
         return view('content.admin.dashboard',$data);
     }
     public function getData(Request $request){
-        $data = Tanam::select('tanaman.jenis_sayur','tanam.kuantitas_tanam','tanam.tersedia','tanam.dipesan')
+        $data = Tanam::select('tanam.id','tanaman.jenis_sayur','tanam.kuantitas_tanam','tanam.tersedia','tanam.dipesan')
                 ->leftJoin('tanaman','tanaman.id','=','tanam.id_tanaman')
                 ->whereNot('tanaman.id',NULL)
                 ->get();
@@ -116,6 +116,7 @@ class DashboardController extends Controller
                 ->leftJoin('tanam','tanam.id','=','detail_tanam.id_tanam')
                 ->leftJoin('tanaman','tanaman.id','=','tanam.id_tanaman')
                 ->whereNot('tanaman.id',NULL)
+                ->where('tanam.id',$request->id)
                 ->get();
         return DataTables::of($data)->make(true);
     }

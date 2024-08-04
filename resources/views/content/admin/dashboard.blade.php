@@ -221,15 +221,27 @@
                     className : 'dt-center'
                 },
                 {
-                    data: null,
-                    render :function(data){
-                        var status = '';
-                        if(data.status === "panen"){
-                            status = '<span class="btn btn-success btn-sm">Panen</span>';
+                    data: 'tanggal_panen',
+                    render : function(data,row,type){
+                        const date = new Date();
+                        let day = date.getDate();
+                        let month = date.getMonth() + 1;
+                        let year = date.getFullYear();
+                        let currentDate = `${year}-${month}-${day}`;                    
+                        var tanggal1 = new Date(data);
+                        var tanggal2 = new Date(currentDate);
+                        tanggal1.setHours(0, 0, 0, 0);
+                        tanggal2.setHours(0, 0, 0, 0);
+                        var selisih = Math.abs(tanggal1 - tanggal2);
+                        var hariDalamMillisecond = 1000 * 60 * 60 * 24;
+                        var waitPanen = Math.round(selisih / hariDalamMillisecond);
+                        var btn ='';
+                        if(tanggal1 <= tanggal2){
+                            btn = '<button class= "btn btn-success btn-sm shadow-sm">Panen</button>';
                         }else{
-                            status = data.tanggal_panen;
+                            btn = "-"+waitPanen;  
                         }
-                        return status;
+                        return btn;
                     },
                     className : 'dt-center'
                 },
