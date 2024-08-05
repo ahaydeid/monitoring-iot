@@ -12,7 +12,7 @@
                     <th class="text-center">Pembeli</th>
                     <th class="text-center">jenis Sayur</th>
                     <th class="text-center">Tanggal Panen</th>
-                    <th class="text-center">Quantitas Pesan</th>
+                    <th class="text-center">Kuantitas Pesan</th>
                     <th class="text-center">Kontak</th>
                     <th class="text-center">Aksi</th>
                 </tr>

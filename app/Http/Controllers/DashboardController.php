@@ -24,14 +24,6 @@ class DashboardController extends Controller
                     'status' => 'panen'
                 ];
                 DetailTanam::where('id', $panen->id)->update($status);
-                $tanam = Tanam::where('id',$panen->id_tanam)->first();
-                if($tanam->id == $panen->id_tanam){
-                    $total = (int)$panen->kuantitas_tanam + (int)$tanam->tersedia;
-                    $Tersedia = [
-                        'tersedia'   => $total
-                    ];
-                    Tanam::where('id',$panen->id_tanam)->update($Tersedia);
-                }
             }
         }
         DB::commit();
@@ -70,7 +62,8 @@ class DashboardController extends Controller
             if($check <= 0 ){
                 $tanam = [
                     'id_tanaman'      => $request->jenis_sayur,
-                    'kuantitas_tanam' => $request->kuantitas_tanam
+                    'kuantitas_tanam' => $request->kuantitas_tanam,
+                    'tersedia'        => $request->kuantitas_tanam
                 ];
                 $save = Tanam::create($tanam);
                 $id = $save->id;
@@ -87,8 +80,10 @@ class DashboardController extends Controller
             DetailTanam::create($Dtltanam);
             if($check > 0){
                 $totalKuantitas = (int)$request->kuantitas_tanam + (int)$checkData->kuantitas_tanam;
+                $tersedia = (int)$request->kuantitas_tanam + (int)$checkData->tersedia;
                 $total = [
                     'kuantitas_tanam' => $totalKuantitas,
+                    'tersedia'        => $tersedia,
                 ];
                 Tanam::where('id',$checkData->id)->update($total);
             }

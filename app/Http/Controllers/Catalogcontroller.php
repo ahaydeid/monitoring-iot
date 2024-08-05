@@ -73,11 +73,15 @@ class Catalogcontroller extends Controller
             $kat->status            = "belum selesai";
             $kat->save();
 
-            $rowData = Tanam::select('tanam.id','tanam.tersedia')->leftJoin('detail_tanam','detail_tanam.id_tanam','=','tanam.id')
+            $rowData = Tanam::select('tanam.id','tanam.tersedia','tanam.dipesan')->leftJoin('detail_tanam','detail_tanam.id_tanam','=','tanam.id')
                         ->where('detail_tanam.id',$request->id_dtl_tanam)->first();
             if($rowData != null){
                 $stockPanen = (int)$rowData->tersedia - (int)$request->kuantitas_pesan;
-                Tanam::where('id',$rowData->id)->update(['tersedia'=>$stockPanen]);
+                $diPanen = (int)$rowData->dipesan + (int)$request->kuantitas_pesan;
+                Tanam::where('id',$rowData->id)->update([
+                        'tersedia' => $stockPanen,
+                        'dipesan'  => $diPanen
+                    ]);
             }
             DB::commit();
             $res = [
